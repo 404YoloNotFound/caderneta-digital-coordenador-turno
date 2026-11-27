@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caderneta Digital | Coordenador de Turno</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="login-view" class="login-shell">
+    <section class="login-card">
+      <div class="brand-mark">CD</div>
+      <p class="eyebrow">GESTÃO ESCOLAR</p>
+      <h1>Caderneta Digital</h1>
+      <p class="muted">Área de acesso do Coordenador de Turno</p>
+      <form id="login-form">
+        <label for="username">Utilizador</label>
+        <input id="username" value="coordenador" autocomplete="username" required>
+        <label for="password">Palavra-passe</label>
+        <input id="password" type="password" value="demo123" autocomplete="current-password" required>
+        <button class="primary full" type="submit">Entrar na plataforma</button>
+      </form>
+      <p class="hint">Demonstração: utilize os dados preenchidos.</p>
+    </section>
+  </div>
+
+  <div id="app-view" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark small">CD</span><div><strong>Caderneta</strong><small>Digital</small></div></div>
+      <div class="side-label">MENU PRINCIPAL</div>
+      <button class="nav-item active" data-page="dashboard"><span>▦</span> Visão geral</button>
+      <button class="nav-item" data-page="students"><span>♙</span> Alunos e turmas</button>
+      <button class="nav-item" data-page="occurrences"><span>▤</span> Ocorrências</button>
+      <button class="nav-item" data-page="history"><span>◷</span> Histórico do aluno</button>
+      <div class="sidebar-bottom"><div class="avatar">CT</div><div><strong>Coordenador</strong><small>Administrador</small></div><button id="logout" class="logout" title="Terminar sessão">↪</button></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar"><div><span class="eyebrow">CADERNETA DIGITAL</span><h2 id="page-heading">Visão geral</h2></div><div class="top-user"><span class="status-dot"></span> Sessão de demonstração</div></header>
+
+      <section id="page-dashboard" class="page">
+        <div class="welcome"><div><p class="eyebrow light">PAINEL DO COORDENADOR</p><h1>Bom dia!</h1><p>Acompanhe as ocorrências e a situação dos alunos.</p></div><div class="welcome-icon">▦</div></div>
+        <div class="stats">
+          <article class="stat-card"><span class="stat-icon purple">▤</span><p>Ocorrências registadas</p><strong id="stat-occurrences">8</strong><small>Registos de demonstração</small></article>
+          <article class="stat-card"><span class="stat-icon blue">♙</span><p>Alunos registados</p><strong id="stat-students">6</strong><small>Em 2 turmas</small></article>
+          <article class="stat-card"><span class="stat-icon orange">◷</span><p>Medidas por acompanhar</p><strong id="stat-pending">3</strong><small>Requerem acompanhamento</small></article>
+        </div>
+        <div class="section-heading"><div><h3>Ocorrências recentes</h3><p class="muted">Últimos registos da caderneta</p></div><button class="primary" data-go="occurrences">Ver ocorrências</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Aluno(s)</th><th>Turma</th><th>Ocorrência</th><th>Data</th><th>Estado</th></tr></thead><tbody id="recent-table"></tbody></table></div>
+        <p class="prototype-note">Dados fictícios para demonstração do protótipo. Não representam registos escolares reais.</p>
+      </section>
+
+      <section id="page-students" class="page hidden">
+        <div class="section-heading"><div><h3>Alunos e turmas</h3><p class="muted">Consulta dos alunos registados no sistema</p></div><button class="primary" id="add-student">+ Novo aluno</button></div>
+        <div class="toolbar"><input id="student-search" placeholder="Pesquisar por nome ou número..."><select id="class-filter"><option value="">Todas as turmas</option><option>10.ª A</option><option>10.ª B</option></select></div>
+        <div class="table-wrap"><table><thead><tr><th>N.º</th><th>Nome do aluno</th><th>Turma</th><th>Estado</th></tr></thead><tbody id="students-table"></tbody></table></div>
+      </section>
+
+      <section id="page-occurrences" class="page hidden">
+        <div class="section-heading"><div><h3>Registo de ocorrências</h3><p class="muted">Registe e consulte situações ocorridas no contexto escolar</p></div><button class="primary" id="new-occurrence">+ Registar ocorrência</button></div>
+        <div class="toolbar"><input id="occ-search" placeholder="Pesquisar ocorrência ou aluno..."><select id="occ-filter"><option value="">Todos os estados</option><option>Pendente</option><option>Em acompanhamento</option><option>Concluída</option></select></div>
+        <div id="occurrence-list" class="occurrence-list"></div>
+      </section>
+
+      <section id="page-history" class="page hidden">
+        <div class="section-heading"><div><h3>Histórico individual</h3><p class="muted">Consulte as ocorrências e medidas associadas a um aluno</p></div></div>
+        <div class="history-search"><label for="history-student">Seleccionar aluno</label><select id="history-student"></select></div>
+        <div id="history-content"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="occurrence-dialog">
+    <form id="occurrence-form" method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">NOVO REGISTO</p><h2>Registar ocorrência</h2></div><button type="button" class="close" data-close="occurrence-dialog">×</button></div>
+      <label for="occ-title">Título / tipo de ocorrência</label><input id="occ-title" placeholder="Ex.: Conflito entre alunos" required>
+      <label for="occ-date">Data</label><input id="occ-date" type="date" required>
+      <label for="occ-students">Alunos envolvidos (pode seleccionar vários)</label><select id="occ-students" multiple required size="4"></select>
+      <label for="occ-description">Descrição dos acontecimentos</label><textarea id="occ-description" rows="4" placeholder="Descreva o que aconteceu..." required></textarea>
+      <label for="occ-witnesses">Testemunhas / intervenientes</label><input id="occ-witnesses" placeholder="Ex.: Professor X, funcionário Y">
+      <label for="occ-measure">Medida ou decisão aplicada</label><textarea id="occ-measure" rows="2" placeholder="Indique a medida, se aplicável"></textarea>
+      <button class="primary full" type="submit">Guardar ocorrência</button>
+    </form>
+  </dialog>
+
+  <dialog id="student-dialog">
+    <form id="student-form" method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">NOVO REGISTO</p><h2>Adicionar aluno</h2></div><button type="button" class="close" data-close="student-dialog">×</button></div>
+      <label for="student-number">Número do aluno</label><input id="student-number" required>
+      <label for="student-name">Nome completo</label><input id="student-name" required>
+      <label for="student-class">Turma</label><select id="student-class"><option>10.ª A</option><option>10.ª B</option></select>
+      <button class="primary full" type="submit">Guardar aluno</button>
+    </form>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>
